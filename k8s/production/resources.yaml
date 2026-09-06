@@ -1,0 +1,73 @@
+---
+# Source: mysql-kubernetes/templates/networkpolicy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mysql-workload-ingress
+spec:
+  podSelector:
+    matchLabels:
+      mysql.oracle.com/cluster: mysql
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          platform-access: 'true'
+---
+# Source: mysql-kubernetes/templates/cluster.yaml
+apiVersion: mysql.oracle.com/v2
+kind: InnoDBCluster
+metadata:
+  name: mysql
+spec:
+  datadirVolumeClaimTemplate:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Gi
+  instances: 3
+  podSpec:
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              component: mysqld
+              mysql.oracle.com/cluster: mysql
+          topologyKey: kubernetes.io/hostname
+    containers:
+    - name: mysql
+      resources:
+        limits:
+          cpu: "4"
+          memory: 8Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
+  router:
+    instances: 2
+    podSpec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                component: mysqlrouter
+                mysql.oracle.com/cluster: mysql
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: router
+        resources:
+          limits:
+            cpu: "1"
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+  secretName: mysql-credentials
+  tlsUseSelfSigned: true
+  version: 8.4.12

@@ -1,0 +1,6 @@
+{
+  "name": "mysql",
+  "repository": "mysql-kubernetes",
+  "namespace": "mysql",
+  "operator": true
+}

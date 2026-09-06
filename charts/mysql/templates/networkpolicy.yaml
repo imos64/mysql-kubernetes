@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mysql-workload-ingress
+spec:
+  podSelector:
+    matchLabels:
+      mysql.oracle.com/cluster: mysql
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          platform-access: 'true'

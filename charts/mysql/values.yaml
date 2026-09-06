@@ -1,0 +1,49 @@
+clusterSpec:
+  secretName: mysql-credentials
+  instances: 3
+  version: 8.4.12
+  tlsUseSelfSigned: true
+  router:
+    instances: 2
+    podSpec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                mysql.oracle.com/cluster: mysql
+                component: mysqlrouter
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: router
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: '1'
+            memory: 512Mi
+  datadirVolumeClaimTemplate:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+  podSpec:
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              mysql.oracle.com/cluster: mysql
+              component: mysqld
+          topologyKey: kubernetes.io/hostname
+    containers:
+    - name: mysql
+      resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+        limits:
+          cpu: '2'
+          memory: 2Gi

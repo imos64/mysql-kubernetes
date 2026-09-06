@@ -1,0 +1,6 @@
+apiVersion: mysql.oracle.com/v2
+kind: InnoDBCluster
+metadata:
+  name: mysql
+spec:
+{{ toYaml .Values.clusterSpec | indent 2 }}

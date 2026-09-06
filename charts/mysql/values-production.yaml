@@ -1,0 +1,15 @@
+clusterSpec:
+  datadirVolumeClaimTemplate:
+    resources:
+      requests:
+        storage: 100Gi
+  podSpec:
+    containers:
+    - name: mysql
+      resources:
+        requests:
+          cpu: '1'
+          memory: 2Gi
+        limits:
+          cpu: '4'
+          memory: 8Gi

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: mysql-operator-bundle
+version: 1.0.0
+type: application
+dependencies:
+- name: mysql-operator
+  alias: controller
+  version: 2.3.0
+  repository: https://mysql.github.io/mysql-operator

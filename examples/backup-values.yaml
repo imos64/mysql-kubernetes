@@ -1,0 +1,17 @@
+# Overlay only after provisioning the bucket and mysql-backup-s3 secret.
+# The secret supplies AWS config and credentials file keys; never commit its payload.
+clusterSpec:
+  backupProfiles:
+    - name: object-store
+      dumpInstance:
+        storage:
+          s3:
+            bucketName: replace-with-your-backup-bucket
+            prefix: mysql
+            config: mysql-backup-s3
+            profile: default
+  backupSchedules:
+    - name: daily
+      schedule: "0 2 * * *"
+      backupProfileName: object-store
+      enabled: true
