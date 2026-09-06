@@ -23,3 +23,9 @@ Set a CSI storage class that meets your failure-domain, expansion and encryption
 `mysql.mysql.svc.cluster.local:6446 (read/write Router); port 6447 (read-only Router)`
 
 Services are private ClusterIP endpoints. Label only trusted client namespaces `platform-access=true`, or replace the ingress rule with explicit workload selectors. Add an approved TLS ingress and SSO/authentication where applicable. Egress filtering, external certificates, DNS and monitoring integration remain environment configuration.
+
+## Pod-template lifecycle
+
+The pinned operator applies custom database/Router pod specifications when creating workloads; changing an existing CR podSpec does not reliably update every running template. Set placement and resources before first installation. For existing production clusters, follow an operator-supported replacement or migration plan and verify actual StatefulSet/Deployment templates; do not assume editing values changes placement. The database anti-affinity selector includes `component=mysqld` so Routers can share workers with database members.
+
+The optional S3 backup secret contains AWS-format `config` and `credentials` file keys, mounted at `/mysqlsh/.aws`; it is not a pair of accessKeyId/secretAccessKey keys. Use your secret manager to supply the files.
