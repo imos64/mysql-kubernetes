@@ -13,3 +13,5 @@ Image versions are explicit in values or locked upstream charts. Tags are versio
 | Chart archive | SHA-256 |
 | --- | --- |
 | `operator/charts/mysql-operator-2.3.0.tgz` | `709511cd712320aa9d55138dd7b27f4851694da179329f2078fb9edcac8bab9f` |
+
+MySQL Server is pinned to 8.4.12; Router is explicitly pinned to the operator release default 26.7.0. The registry did not publish community-router:8.4.12, so allowing the Router tag to inherit the server version causes ImagePullBackOff. Both configured image tags were checked against Oracle Container Registry.
