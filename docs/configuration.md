@@ -29,3 +29,5 @@ Services are private ClusterIP endpoints. Label only trusted client namespaces `
 The pinned operator applies custom database/Router pod specifications when creating workloads; changing an existing CR podSpec does not reliably update every running template. Set placement and resources before first installation. For existing production clusters, follow an operator-supported replacement or migration plan and verify actual StatefulSet/Deployment templates; do not assume editing values changes placement. The database anti-affinity selector includes `component=mysqld` so Routers can share workers with database members.
 
 The optional S3 backup secret contains AWS-format `config` and `credentials` file keys, mounted at `/mysqlsh/.aws`; it is not a pair of accessKeyId/secretAccessKey keys. Use your secret manager to supply the files.
+
+When reusing an operator installed in a different namespace, allow that namespace through the workload ingress policy (for example with the approved `platform-access=true` label). The default colocated operator needs no cross-namespace exception.
